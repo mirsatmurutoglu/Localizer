@@ -14,7 +14,7 @@ func application(application: UIApplication, didFinishLaunchingWithOptions launc
 ```
 When you want to change your language in your app, set the language that you want to.
 ```swift
-Localizer.setAppleLAnguageTo("en") // 'en', 'tr', 'jp' etc etc
+Localizer.setAppleLanguageTo("en") // 'en', 'tr', 'jp' etc etc
 ```
 After you set your language, you must set your root view controller to default one, and the app will restart the all UI
 
