@@ -16,6 +16,10 @@ When you want to change your language in your app, change the language like this
 ```swift
 Localizer.setAppleLanguageTo("en") // 'en', 'tr', 'jp' etc etc
 ```
+Get current app's language
+```swift
+var currentLanguage = Localizer.currentAppleLanguage()
+```
 After you change your language, you must set your root view controller to default one, and the app will restart the all UI and update the language.
 
 ```swift
