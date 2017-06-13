@@ -6,7 +6,7 @@ I created this to be more flexible than the in built localiser. With this file, 
 ### Example Code
 
 ```swift
-func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 ....
   Localizer.setAppleLanguageTo("en")// Optional: set default language to English for the first time,
   Localizer.DoTheSwizzling()
@@ -20,12 +20,12 @@ After you change your language, you must set your root view controller to defaul
 
 ```swift
 // go to root VC and restart all the UI
-let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+let appDelegate = UIApplication.shared.delegate as! AppDelegate
 let mainSB = UIStoryboard(name: "YOUR STORY BOARD", bundle: nil)
-let rootVC = mainSB.instantiateViewControllerWithIdentifier("YOUR ROOT VC")
+let rootVC = mainSB.instantiateViewController(withIdentifier: "YOUR ROOT VC")
 appDelegate.window!.rootViewController = rootVC
 ```
 
 ## Notes
-- Copy Localizer.swift file into your application
+- Copy 'Localizer.swift' file into your application
 - Swift 3
