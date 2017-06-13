@@ -27,4 +27,5 @@ appDelegate.window!.rootViewController = rootVC
 ```
 
 ## Notes
+- Copy Localizer.swift file into your application
 - Swift 3
