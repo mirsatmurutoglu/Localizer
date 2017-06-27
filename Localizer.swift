@@ -2,7 +2,7 @@
 //  Localizer.swift
 //  Mirsat Murutoglu
 //
-//  Created by Mirsat Murutoglu on 06/06/17.
+//  Created by Mirsat Murutoglu on 25/06/17.
 //  Copyright © 2017 Mirsat Murutoglu. All rights reserved.
 //
 
