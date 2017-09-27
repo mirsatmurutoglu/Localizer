@@ -11,49 +11,47 @@ import UIKit
 
 class Localizer: NSObject {
     static let APPLE_LANGUAGE_KEY = "AppleLanguages"
-    
+
     class func DoTheSwizzling() {
-        MethodSwizzleGivenClassName(NSBundle.self, originalSelector: #selector(NSBundle.localizedStringForKey(_:value:table:)), overrideSelector: #selector(NSBundle.specialLocalizedStringForKey(_:value:table:)))
+        MethodSwizzleGivenClassName(Bundle.self, originalSelector: #selector(Bundle.localizedString(forKey:value:table:)), overrideSelector: #selector(Bundle.specialLocalizedStringForKey(_:value:table:)))
     }
-    
+
     class func currentAppleLanguage() -> String{
-        let userdef = NSUserDefaults.standardUserDefaults()
-        let langArray = userdef.objectForKey(APPLE_LANGUAGE_KEY) as! NSArray
+        let userdef = UserDefaults.standard
+        let langArray = userdef.object(forKey: APPLE_LANGUAGE_KEY) as! NSArray
         let current = langArray.firstObject as! String
-        let currentWithoutLocale = current.substringToIndex(current.startIndex.advancedBy(2))
+        let currentWithoutLocale = current.substring(to: current.characters.index(current.startIndex, offsetBy: 2))
         return currentWithoutLocale
 
     }
-    /// set language to be the first in Applelanguages list
-    class func setAppleLAnguageTo(lang: String) {
-        let userdef = NSUserDefaults.standardUserDefaults()
-        userdef.setObject([lang,currentAppleLanguage()], forKey: APPLE_LANGUAGE_KEY)
+    /// set @lang to be the first in Applelanguages list
+    class func setAppleLAnguageTo(_ lang: String) {
+        let userdef = UserDefaults.standard
+        userdef.set([lang,currentAppleLanguage()], forKey: APPLE_LANGUAGE_KEY)
         userdef.synchronize()
     }
 }
 
-extension NSBundle {
-    func specialLocalizedStringForKey(key: String, value: String?, table tableName: String?) -> String {
+extension Bundle {
+    func specialLocalizedStringForKey(_ key: String, value: String?, table tableName: String?) -> String {
         var currentLanguage = Localizer.currentAppleLanguage()
-        
         if currentLanguage == "zh" {
-            currentLanguage = currentLanguage + "-Hans" // add this append method if language name has more than 2 letters like Chinese 'zh-Hans'
+            currentLanguage = currentLanguage + "-Hans"
         }
-        
-        var bundle = NSBundle();
-        if let _path = NSBundle.mainBundle().pathForResource(currentLanguage, ofType: "lproj") {
-            bundle = NSBundle(path: _path)!
+        var bundle = Bundle();
+        if let _path = Bundle.main.path(forResource: currentLanguage, ofType: "lproj") {
+            bundle = Bundle(path: _path)!
         } else {
-            let _path = NSBundle.mainBundle().pathForResource("Base", ofType: "lproj")!
-            bundle = NSBundle(path: _path)!
+            let _path = Bundle.main.path(forResource: "Base", ofType: "lproj")!
+            bundle = Bundle(path: _path)!
         }
         return (bundle.specialLocalizedStringForKey(key, value: value, table: tableName))
     }
 }
-
-func MethodSwizzleGivenClassName(cls: AnyClass, originalSelector: Selector, overrideSelector: Selector) {
-    let origMethod: COpaquePointer = class_getInstanceMethod(cls, originalSelector);
-    let overrideMethod: COpaquePointer = class_getInstanceMethod(cls, overrideSelector);
+/// Exchange the implementation of two methods for the same Class
+func MethodSwizzleGivenClassName(_ cls: AnyClass, originalSelector: Selector, overrideSelector: Selector) {
+    let origMethod: OpaquePointer = class_getInstanceMethod(cls, originalSelector);
+    let overrideMethod: OpaquePointer = class_getInstanceMethod(cls, overrideSelector);
     if (class_addMethod(cls, originalSelector, method_getImplementation(overrideMethod), method_getTypeEncoding(overrideMethod))) {
         class_replaceMethod(cls, overrideSelector, method_getImplementation(origMethod), method_getTypeEncoding(origMethod));
     } else {
